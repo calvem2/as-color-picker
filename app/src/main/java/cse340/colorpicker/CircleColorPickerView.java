@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import androidx.annotation.ColorInt;
@@ -19,6 +20,8 @@ import androidx.core.graphics.ColorUtils;
  *
  * PLEASE READ AbstractColorPickerView.java to learn about these.
  */
+// Documentation:
+// ColorUtils
 public class CircleColorPickerView extends ColorPickerView {
 
     /**
@@ -30,6 +33,9 @@ public class CircleColorPickerView extends ColorPickerView {
     protected void updateModel(float x, float y) {
         // TODO implement this
         // hint: we give you a very helpful function to call
+        float angle = getTouchAngle(x, y);
+//        Log.i("getTouchAngle", Math.toDegrees(angle) + "");
+        setColor(getColorFromAngle(angle));
     }
 
     /* ********************************************************************************************** *
@@ -49,6 +55,9 @@ public class CircleColorPickerView extends ColorPickerView {
 
     private float mCenterCircleRadius, mThumbRadius;
 
+    private final Paint mThumbPaint;
+    private final Paint mCenterPaint;
+
     /* ********************************************************************************************** *
      *                               <End of other fields and constants declarations />
      * ********************************************************************************************** */
@@ -64,6 +73,13 @@ public class CircleColorPickerView extends ColorPickerView {
 
         // TODO: Initialize variables as necessary (such as state)
         // Caching the paint objects is good style and avoids unnecessary computation.
+        mState = State.START;
+//        mCenterX
+        mThumbPaint = new Paint();
+        mThumbPaint.setStyle(Paint.Style.FILL);
+        mThumbPaint.setColor(Color.WHITE);
+        mCenterPaint = new Paint();
+        mThumbPaint.setStyle(Paint.Style.FILL);
     }
 
     /**
@@ -75,6 +91,18 @@ public class CircleColorPickerView extends ColorPickerView {
         super.onDraw(canvas);
 
         // TODO: draw the thumb and center circle
+        //todo calc actual position
+        mCenterPaint.setColor(mCurrentColor);
+        canvas.drawCircle(mCenterX, mCenterY, mCenterCircleRadius, mCenterPaint);
+//        float theta = getAngleFromColor(mCurrentColor);
+//        float hyp = mRadius - mThumbRadius;
+//        float dx = (float) (Math.cos(theta)) * hyp;
+//        float dy = (float) (Math.sin(theta)) * hyp;
+        float[] thumbPosition = getAnglePosition(getAngleFromColor(mCurrentColor));
+        int alpha = mState == State.INSIDE ? (int) (0.5f * 255) : 255;
+        mThumbPaint.setAlpha(alpha);
+        canvas.drawCircle(thumbPosition[0], thumbPosition[1], mThumbRadius, mThumbPaint);
+
     }
 
     /**
@@ -91,6 +119,13 @@ public class CircleColorPickerView extends ColorPickerView {
 
         // TODO: calculate mRadius, mCenterX, and mCenterY based View dimensions
         // Hint: the ColorPicker view is not a square, base it off the min of the width and height
+        // todo: use changed?
+        mRadius = Math.min(bottom - top, right - left) / 2f;
+        mCenterX = (right - left) / 2f;
+        mCenterY = (bottom - top) / 2f;
+
+        mThumbRadius = RADIUS_TO_THUMB_RATIO * mRadius;
+        mCenterCircleRadius = mRadius - mThumbRadius * 2;
     }
 
     /**
@@ -102,9 +137,18 @@ public class CircleColorPickerView extends ColorPickerView {
     @Override
     protected EssentialGeometry essentialGeometry(MotionEvent event) {
         // TODO: compute the geometry for the given event
+//        EssentialGeometry tets = ((mCenterX - mRadius <= getX() && getX() <= mCenterX + mRadius) &&
+//                (mCenterY - mRadius <= getY() && getY() <= mCenterY + mRadius)) ?
+//                EssentialGeometry.INSIDE : EssentialGeometry.OUTSIDE;
+//        Log.i("essential geometry", tets + "");
+        float dist = (float) Math.sqrt(Math.pow(mCenterX - event.getX(), 2) + Math.pow(mCenterY - event.getY(), 2));
+        return dist <= mRadius ? EssentialGeometry.INSIDE : EssentialGeometry.OUTSIDE;
+//        return ((mCenterX - mRadius <= getX() && getX() <= mCenterX + mRadius) &&
+//                (mCenterY - mRadius <= getY() && getY() <= mCenterY + mRadius)) ?
+//                EssentialGeometry.INSIDE : EssentialGeometry.OUTSIDE;
 
         // Please check if a touch event is inside the color picker circle
-        return null;
+//        return null;
     }
 
     /* ********************************************************************************************** *
@@ -121,7 +165,29 @@ public class CircleColorPickerView extends ColorPickerView {
     public static float getAngleFromColor(int color) {
         float[] HSL = new float[3];
         ColorUtils.colorToHSL(color, HSL);
+//        Log.i("get angle from color", (float) Math.toRadians(HSL[0] - 90f) + "");
         return (float) Math.toRadians(HSL[0] - 90f);
+    }
+
+    /**
+     * Converts from an angle to a color on the wheel.
+     *
+     * @param angle position on the wheel in radians
+     * @return color at this position of this color on the wheel.
+     * @see #getTouchAngle(float, float)
+     */
+    public static @ColorInt int getColorFromAngle(double angle) {
+        // todo: implement -> really coding out of my ass here
+        float degrees = (float) (Math.toDegrees(angle)) + 90f;
+        if (degrees < 0f) {
+            degrees += 360f;
+        }
+
+        // todo: use 1f for value?
+        float[] HSL = {degrees, 1f, .5f};
+//        Log.i("angle value", degrees + "");
+//        Log.i("angle to color", ColorUtils.HSLToColor(HSL) + "");
+        return ColorUtils.HSLToColor(HSL);
     }
 
     /***
@@ -140,5 +206,18 @@ public class CircleColorPickerView extends ColorPickerView {
         // However, you can override this function in CircleColorPickerView
         // with your own angle mappings if you desire.
         return (float) Math.atan2(touchY - mCenterY, touchX - mCenterX);
+    }
+
+    /***
+     * Calculate the thumb location based on the angle of selection on the color wheel
+     *
+     * @param angle position on the wheel in radians
+     * @return horizontal and vertical positions of the thumb [touchX, touchY]
+     */
+    protected float[] getAnglePosition(double angle) {
+        float hyp = mRadius - mThumbRadius;
+        float dx = (float) (Math.cos(angle)) * hyp;
+        float dy = (float) (Math.sin(angle)) * hyp;
+        return new float[] {mCenterY + dx, mCenterY + dy};
     }
 }

@@ -3,6 +3,7 @@ package cse340.colorpicker;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import androidx.annotation.ColorInt;
 
@@ -24,7 +25,9 @@ public class ColorPickerView extends AbstractColorPickerView {
     public void setColor(@ColorInt int newColor) {
         mCurrentColor = newColor;
         // TODO maybe there's more to do here
-        // hint: there is.
+        // hint: there is.\
+        // todo: ? set alpha of thumb?
+//        invalidate();
     }
 
     /**
@@ -89,16 +92,32 @@ public class ColorPickerView extends AbstractColorPickerView {
 
         // make sure to make calls to updateModel, invalidate, and invokeColorChangeListeners
 
-        // switch (mState) {
-        //     case START:
-        //         // TODO: fill in start state to follow PPS
-        //         return true;
-        //     case INSIDE:
-        //         // TODO: fill in inside state to follow PPS
-        //         return true;
-        //     default:
-        //         return false;
-        // }
-        return false;
+         switch (mState) {
+             case START:
+                 // TODO: fill in start state to follow PPS
+                 if (event.getAction() == MotionEvent.ACTION_DOWN && geometry == EssentialGeometry.INSIDE) {
+                    updateModel(event.getX(), event.getY());
+                    invalidate();
+                    mState = State.INSIDE;
+                    return true;
+                 }
+//                 break;
+             case INSIDE:
+                 // TODO: fill in inside state to follow PPS
+                 if (event.getAction() == MotionEvent.ACTION_UP) {
+                     invokeColorChangeListeners(mCurrentColor);
+                     invalidate();
+                     mState = State.START;
+                     return true;
+                 } else if (event.getAction() == MotionEvent.ACTION_MOVE && geometry == EssentialGeometry.INSIDE) {
+                     updateModel(event.getX(), event.getY());
+                     invalidate();
+//                     Log.i("moving inside", "hello");
+                     return true;
+                 }
+//                 break;
+             default:
+                 return false;
+         }
     }
 }
