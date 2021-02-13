@@ -63,7 +63,15 @@ public class MainActivity extends AbstractMainActivity {
         });
 
         // TODO: register the color change listener for both of your colorPickers
-        mColorPicker.addColorChangeListener(new AbstractColorPickerView.ColorChangeListener() {
+        AbstractColorPickerView picker = findViewById(R.id.circleColorPicker);
+        picker.addColorChangeListener(new AbstractColorPickerView.ColorChangeListener() {
+            @Override
+            public void onColorSelected(int color) {
+                updateColor(color);
+            }
+        });
+        picker = findViewById(R.id.myColorPicker);
+        picker.addColorChangeListener(new AbstractColorPickerView.ColorChangeListener() {
             @Override
             public void onColorSelected(int color) {
                 updateColor(color);

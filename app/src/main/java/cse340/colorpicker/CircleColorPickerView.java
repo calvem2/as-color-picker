@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import androidx.annotation.ColorInt;
@@ -154,7 +153,7 @@ public class CircleColorPickerView extends ColorPickerView {
      * Converts from an angle to a color on the wheel.
      *
      * @param angle position on the wheel in radians
-     * @return color at this position of this color on the wheel.
+     * @return color at this position on the wheel.
      * @see #getTouchAngle(float, float)
      */
     public static @ColorInt int getColorFromAngle(double angle) {

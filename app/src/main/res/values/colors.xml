@@ -4,4 +4,18 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorBackground">#333</color>
+    <color name="red">#F66E6D</color>
+    <color name="orange">#F6B36E</color>
+    <color name="yellow">#F5F66D</color>
+    <color name="green">#9DE14F</color>
+    <color name="blue">#6FF3F6</color>
+    <color name="violet">#C694F7</color>
+    <array name="rainbow">
+        <item>@color/red</item>
+        <item>@color/orange</item>
+        <item>@color/yellow</item>
+        <item>@color/green</item>
+        <item>@color/blue</item>
+        <item>@color/violet</item>
+    </array>
 </resources>

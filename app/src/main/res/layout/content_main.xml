@@ -113,7 +113,7 @@
     <cse340.colorpicker.MyColorPickerView
         android:id="@+id/myColorPicker"
         android:layout_width="280dp"
-        android:layout_height="10dp"
+        android:layout_height="100dp"
         android:layout_centerInParent="true"
         android:visibility="invisible" />
 </RelativeLayout>
