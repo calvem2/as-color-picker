@@ -26,8 +26,7 @@ public class ColorPickerView extends AbstractColorPickerView {
         mCurrentColor = newColor;
         // TODO maybe there's more to do here
         // hint: there is.\
-        // todo: ? set alpha of thumb?
-//        invalidate();
+        invalidate();
     }
 
     /**
@@ -97,7 +96,7 @@ public class ColorPickerView extends AbstractColorPickerView {
                  // TODO: fill in start state to follow PPS
                  if (event.getAction() == MotionEvent.ACTION_DOWN && geometry == EssentialGeometry.INSIDE) {
                     updateModel(event.getX(), event.getY());
-                    invalidate();
+//                    invalidate();
                     mState = State.INSIDE;
                     return true;
                  }
@@ -111,11 +110,9 @@ public class ColorPickerView extends AbstractColorPickerView {
                      return true;
                  } else if (event.getAction() == MotionEvent.ACTION_MOVE && geometry == EssentialGeometry.INSIDE) {
                      updateModel(event.getX(), event.getY());
-                     invalidate();
-//                     Log.i("moving inside", "hello");
+//                     invalidate();
                      return true;
                  }
-//                 break;
              default:
                  return false;
          }
