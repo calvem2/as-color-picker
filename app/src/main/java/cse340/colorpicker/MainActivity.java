@@ -94,7 +94,9 @@ public class MainActivity extends AbstractMainActivity {
         // TODO: Set ColorPicker color from state.
         // HINT: If state == null, then there was no saved state.
         //       In this case, use AbstractColorPickerView.DEFAULT_COLOR
-
+        int color = state == null ? AbstractColorPickerView.DEFAULT_COLOR : state.getInt(COLOR_BUNDLE_KEY);
+        mColorPicker.setColor(color);
+        updateColor(color);
     }
 
     /**
@@ -106,6 +108,7 @@ public class MainActivity extends AbstractMainActivity {
         super.onSaveInstanceState(outState);
 
         // TODO: get current color and save to bundle.
+        outState.putInt(COLOR_BUNDLE_KEY, mColorModel.getColor());
     }
 
 
@@ -115,5 +118,6 @@ public class MainActivity extends AbstractMainActivity {
 
         // TODO: restore the state of the application from the bundle
         // Hint: look for a method to help you.
+        setStartingColor(savedInstanceState);
     }
 }
