@@ -35,6 +35,7 @@ public class MyColorPickerView extends ColorPickerView {
      * You may also create any fields you want, that are not necessary for the state but allow         *
      * for better optimized or cleaner code                                                             *
      * ********************************************************************************************** */
+    /** Paint brush for color sections */
     private final Paint paint;
     /** The colors for the picker */
     private final int[] colorChoices;
@@ -66,6 +67,7 @@ public class MyColorPickerView extends ColorPickerView {
         mState = State.START;
         paint.setStrokeWidth(getHeight());
         int colorWidth = getWidth() / colorChoices.length;
+        // Draw each color section
         for (int i = 0; i < colorChoices.length; i++) {
             paint.setColor(colorChoices[i]);
             canvas.drawLine(i * colorWidth, getHeight() / 2f, i * colorWidth + colorWidth,getHeight() / 2f, paint);
@@ -87,12 +89,7 @@ public class MyColorPickerView extends ColorPickerView {
      *                               <Helper Functions />
      *           TODO add helper functions as needed (i.e. use good coding practice)
      * ********************************************************************************************** */
-    /**
-     * Converts from an angle to a color on the wheel.
-     *
-     * @param angle position on the wheel in radians
-     * @return color at this position of this color on the wheel.
-     */
+
     /***
      * Calculate the color of the selection on color picker given a touch.
      *
@@ -100,7 +97,6 @@ public class MyColorPickerView extends ColorPickerView {
      * @return color at this position on the picker.
      */
     protected @ColorInt int getColorFromTouch(float touchX) {
-        System.out.println(touchX);
         return colorChoices[(int) (touchX) / (getWidth() / colorChoices.length)];
     }
 

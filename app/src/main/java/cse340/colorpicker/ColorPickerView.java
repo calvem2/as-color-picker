@@ -3,7 +3,6 @@ package cse340.colorpicker;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import androidx.annotation.ColorInt;
 
@@ -96,11 +95,9 @@ public class ColorPickerView extends AbstractColorPickerView {
                  // TODO: fill in start state to follow PPS
                  if (event.getAction() == MotionEvent.ACTION_DOWN && geometry == EssentialGeometry.INSIDE) {
                     updateModel(event.getX(), event.getY());
-//                    invalidate();
                     mState = State.INSIDE;
                     return true;
                  }
-//                 break;
              case INSIDE:
                  // TODO: fill in inside state to follow PPS
                  if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -110,7 +107,6 @@ public class ColorPickerView extends AbstractColorPickerView {
                      return true;
                  } else if (event.getAction() == MotionEvent.ACTION_MOVE && geometry == EssentialGeometry.INSIDE) {
                      updateModel(event.getX(), event.getY());
-//                     invalidate();
                      return true;
                  }
              default:

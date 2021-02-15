@@ -20,7 +20,7 @@ import androidx.core.graphics.ColorUtils;
  * PLEASE READ AbstractColorPickerView.java to learn about these.
  */
 // Documentation:
-// ColorUtils: https://developer.android.com/reference/androidx/core/graphics/ColorUtils
+// Color: https://developer.android.com/reference/android/graphics/Color
 public class CircleColorPickerView extends ColorPickerView {
 
     /**
@@ -93,7 +93,6 @@ public class CircleColorPickerView extends ColorPickerView {
         int alpha = mState == State.INSIDE ? (int) (0.5f * 255) : 255;
         mThumbPaint.setAlpha(alpha);
         canvas.drawCircle(thumbPosition[0], thumbPosition[1], mThumbRadius, mThumbPaint);
-
     }
 
     /**
@@ -110,7 +109,6 @@ public class CircleColorPickerView extends ColorPickerView {
 
         // TODO: calculate mRadius, mCenterX, and mCenterY based View dimensions
         // Hint: the ColorPicker view is not a square, base it off the min of the width and height
-        // todo: use changed?
         mRadius = Math.min(bottom - top, right - left) / 2f;
         mCenterX = (right - left) / 2f;
         mCenterY = (bottom - top) / 2f;
@@ -157,14 +155,12 @@ public class CircleColorPickerView extends ColorPickerView {
      * @see #getTouchAngle(float, float)
      */
     public static @ColorInt int getColorFromAngle(double angle) {
-        // todo: implement -> really coding out of my ass here
         float degrees = (float) (Math.toDegrees(angle)) + 90f;
         if (degrees < 0f) {
             degrees += 360f;
         }
-        // todo: use 1f for value?
-        float[] HSL = {degrees, 1f, .5f};
-        return ColorUtils.HSLToColor(HSL);
+        float[] HSV = {degrees, 1f, 1f};
+        return Color.HSVToColor(HSV);
     }
 
     /***
