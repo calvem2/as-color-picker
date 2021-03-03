@@ -105,8 +105,10 @@ public class ColorPickerView extends AbstractColorPickerView {
                      invalidate();
                      mState = State.START;
                      return true;
-                 } else if (event.getAction() == MotionEvent.ACTION_MOVE && geometry == EssentialGeometry.INSIDE) {
-                     updateModel(event.getX(), event.getY());
+                 } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                     if (geometry == EssentialGeometry.INSIDE) {
+                         updateModel(event.getX(), event.getY());
+                     }
                      return true;
                  }
              default:
